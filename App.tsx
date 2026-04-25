@@ -1,0 +1,299 @@
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Analytics } from "@vercel/analytics/react";
+const Sidebar = lazy(() => import('./components/Sidebar'));
+const LandingPage = lazy(() => import('./components/LandingPage'));
+const MapView = lazy(() => import('./components/MapView'));
+const MapQuestView = lazy(() => import('./components/MapQuestView'));
+const History = lazy(() => import('./components/History'));
+const CityGuide = lazy(() => import('./components/CityGuide'));
+const Gallery = lazy(() => import('./components/Gallery'));
+const Wallet = lazy(() => import('./components/Wallet'));
+const TaskManager = lazy(() => import('./components/TaskManager'));
+const Food = lazy(() => import('./components/Food'));
+const Accommodation = lazy(() => import('./components/Accommodation'));
+const ARGuide = lazy(() => import('./components/ARGuide'));
+const Parking = lazy(() => import('./components/Parking'));
+const LanguageSelector = lazy(() => import('./components/LanguageSelector'));
+
+import { Menu } from 'lucide-react';
+import { App as CapApp } from '@capacitor/app';
+import { AppTab, Language } from './types';
+import { Preferences } from '@capacitor/preferences';
+import WaterSplash from './components/WaterSplash';
+import { ImageProvider } from './hooks/ImageContext';
+import FullScreenImageViewer from './components/FullScreenImageViewer';
+import ErrorBoundary from './components/ErrorBoundary';
+import { getAppFeatures } from './utils/platform';
+
+// Solana Imports
+import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
+import { clusterApiUrl } from '@solana/web3.js';
+import { 
+  SolanaMobileWalletAdapter, 
+  createDefaultAuthorizationResultCache, 
+  createDefaultAddressSelector, 
+  createDefaultWalletNotFoundHandler 
+} from '@solana-mobile/wallet-adapter-mobile';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+
+// Default styles that can be overridden by your app
+import '@solana/wallet-adapter-react-ui/styles.css';
+
+const App: React.FC = () => {
+  // Solana configuration
+  const network = WalletAdapterNetwork.Mainnet;
+  const endpoint = React.useMemo(() => clusterApiUrl(network), [network]);
+  const wallets = React.useMemo(() => [
+    new SolflareWalletAdapter(),
+    new SolanaMobileWalletAdapter({
+      appIdentity: {
+        name: 'Tuzla Tour App',
+        uri: window.location.origin,
+        icon: '/assets/Gallery/QuestQRLocations/nobckgsalineslogo.png',
+      },
+      authorizationResultCache: createDefaultAuthorizationResultCache(),
+      addressSelector: createDefaultAddressSelector(),
+      cluster: network,
+      onWalletNotFound: createDefaultWalletNotFoundHandler(),
+    }),
+  ], [network]);
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect={false}>
+        <WalletModalProvider>
+          <AppContent />
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+};
+
+const AppContent: React.FC = () => {
+  const { disconnect } = useWallet();
+  const [activeTab, setActiveTab] = useState<AppTab>(AppTab.LANDING);
+  const [lang, setLang] = useState<Language>('bs');
+  const [unlockedRewards, setUnlockedRewards] = useState<string[]>([]);
+  const [navigationTarget, setNavigationTarget] = useState<any | null>(null);
+  const [autoOpenScanner, setAutoOpenScanner] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [history, setHistory] = useState<AppTab[]>([AppTab.LANDING]);
+  const features = getAppFeatures();
+
+  useEffect(() => {
+    const loadUnlocked = async () => {
+      const { value } = await Preferences.get({ key: 'tuzla_unlocked' });
+      if (value) {
+        try {
+          setUnlockedRewards(JSON.parse(value));
+        } catch {
+          setUnlockedRewards(['mesa_selimovic']);
+        }
+      } else {
+        setUnlockedRewards(['mesa_selimovic']);
+      }
+    };
+    loadUnlocked();
+  }, []);
+
+  useEffect(() => {
+    Preferences.set({ key: 'tuzla_unlocked', value: JSON.stringify(unlockedRewards) });
+  }, [unlockedRewards]);
+
+  const navigateToTab = (tab: AppTab, options?: { openScanner?: boolean }) => {
+    if (tab !== activeTab) {
+      setHistory(prev => [...prev, tab]);
+      setActiveTab(tab);
+    }
+    if (options?.openScanner) {
+      setAutoOpenScanner(true);
+    } else {
+      setAutoOpenScanner(false);
+    }
+    setIsDrawerOpen(false);
+  };
+
+  useEffect(() => {
+    const handleBackButton = async () => {
+      if (isDrawerOpen) {
+        setIsDrawerOpen(false);
+        return;
+      }
+
+      if (history.length > 1) {
+        const newHistory = [...history];
+        newHistory.pop(); // Remove current
+        const previousTab = newHistory[newHistory.length - 1];
+        setHistory(newHistory);
+        setActiveTab(previousTab);
+      } else {
+        // We are at the root (Landing Page)
+        const confirmed = window.confirm(lang === 'bs' ? 'Da li želite izaći iz aplikacije?' : 'Would you like to exit app?');
+        if (confirmed) {
+          try {
+            await disconnect();
+          } catch (e) {
+            console.error("Failed to disconnect wallet on exit", e);
+          }
+          CapApp.exitApp();
+        }
+      }
+    };
+
+    const registration = CapApp.addListener('backButton', handleBackButton);
+
+    return () => {
+      registration.then(r => r.remove());
+    };
+  }, [history, isDrawerOpen, lang, disconnect]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      void disconnect();
+    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => window.removeEventListener('beforeunload', handleUnload);
+  }, [disconnect]);
+
+  const renderContent = () => {
+    return (
+      <Suspense fallback={
+        <div className="h-full flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-50">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4" />
+          <p className="text-blue-900 font-black uppercase text-xs tracking-widest animate-pulse">
+            {lang === 'en' ? 'Loading Tuzla...' : 'Učitavanje...'}
+          </p>
+        </div>
+      }>
+        {(() => {
+          switch (activeTab) {
+            case AppTab.LANDING: return <LandingPage lang={lang} onNavigate={navigateToTab} />;
+            case AppTab.CITY_GUIDE: return <CityGuide lang={lang} />;
+            case AppTab.HISTORY: return <History lang={lang} />;
+            case AppTab.MAP: return (
+              <MapView
+                lang={lang}
+                features={features}
+              />
+            );
+            case AppTab.QUEST: return (
+              <MapQuestView
+                lang={lang}
+                features={features}
+                unlockedRewards={unlockedRewards}
+                onRewardFound={(id) =>
+                  setUnlockedRewards((prev) => (prev.includes(id) ? prev : [...prev, id]))
+                }
+                onToggleAR={() => setActiveTab(AppTab.AR)}
+                navigationTarget={navigationTarget}
+                onClearNavigation={() => setNavigationTarget(null)}
+                initialOpenScanner={autoOpenScanner}
+              />
+            );
+            case AppTab.GALLERY: return <Gallery lang={lang} features={features} />;
+            case AppTab.WALLET: return <Wallet lang={lang} />;
+            case AppTab.TASK_MANAGER: return <TaskManager lang={lang} />;
+            case AppTab.FOOD: return <Food lang={lang} />;
+            case AppTab.ACCOMMODATION: return <Accommodation lang={lang} />;
+            case AppTab.AR: return (
+              <ARGuide
+                lang={lang}
+                features={features}
+                onNavigate={(poi) => {
+                  setNavigationTarget(poi);
+                  setActiveTab(AppTab.MAP);
+                }}
+              />
+            );
+            case AppTab.PARKING: return <Parking lang={lang} />;
+            default: return <LandingPage lang={lang} onNavigate={navigateToTab} />;
+          }
+        })()}
+      </Suspense>
+    );
+  };
+
+  return (
+    <ImageProvider>
+      <Analytics />
+      {!features.isAndroidLight && <WaterSplash />}
+
+      {/* Modern Top Bar */}
+      <header className="fixed top-0 left-0 right-0 h-[88px] bg-white/80 backdrop-blur-md z-[80] border-b border-slate-100 flex items-center justify-between px-3 sm:px-6 shadow-sm">
+        {/* LEFT: Menu Button & Logo */}
+        <div className="flex items-center z-10 w-20">
+          <button
+            onClick={() => setIsDrawerOpen(true)}
+            className="flex flex-col items-center justify-center p-1 bg-transparent border-none transition-all active:scale-95 group focus:outline-none"
+          >
+            <motion.img
+              animate={{ filter: ["saturate(0%)", "saturate(150%)", "saturate(0%)"] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              src="/assets/Gallery/QuestQRLocations/nobckgsalineslogo.png"
+              alt="Menu Logo"
+              className="w-[60px] sm:h-[60px] object-contain transition-transform group-hover:scale-110"
+            />
+          </button>
+        </div>
+
+        {/* CENTER: App Title */}
+        <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center justify-center z-0 w-[55%] sm:w-auto pointer-events-none">
+          <h1 className="text-[4.5vw] sm:text-xl lg:text-2xl font-black tracking-tight leading-none uppercase flex flex-row flex-wrap sm:flex-nowrap justify-center items-center gap-1 sm:gap-1.5 text-center">
+            <span className="text-blue-900">Tuzla</span>
+            <span className="text-blue-500">Tour</span>
+            <span className="text-amber-500">Guide</span>
+          </h1>
+        </div>
+
+        {/* RIGHT: Utility controls */}
+        <div className="flex items-center justify-end z-10 w-20">
+          <LanguageSelector currentLang={lang} onSelect={setLang} />
+        </div>
+      </header>
+
+      {/* SVG Filter to remove black background from logos */}
+      <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+        <filter id="remove-black-background" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values="
+            1 0 0 0 0
+            0 1 0 0 0
+            0 0 1 0 0
+            1 1 1 0 -0.05
+          " />
+        </filter>
+      </svg>
+
+      <div className="relative min-h-screen bg-white flex overflow-hidden pt-[88px]">
+        {/* Main Sliding Drawer */}
+        <Sidebar
+          isOpen={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          activeTab={activeTab}
+          onSelectTab={navigateToTab}
+          lang={lang}
+        />
+
+        <div
+          className="flex-1 flex flex-col min-h-[calc(100vh-64px)] overflow-hidden"
+          style={{
+            filter: isDrawerOpen ? 'blur(4px)' : 'none',
+            transition: 'filter 0.3s ease',
+          }}
+        >
+          {/* Main Content */}
+          <main className="flex-1 overflow-y-auto overflow-x-hidden">
+            <ErrorBoundary>
+              {renderContent()}
+            </ErrorBoundary>
+          </main>
+        </div>
+      </div>
+      <FullScreenImageViewer />
+    </ImageProvider>
+  );
+};
+
+export default App;
