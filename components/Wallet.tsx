@@ -5,9 +5,7 @@ import { Language } from '../types';
 import { TRANSLATIONS } from '../constants';
 import { Wallet as WalletIcon, Lock, Camera, CheckCircle2 } from 'lucide-react';
 
-// Solana Imports
-import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+
 
 interface WalletProps {
     lang: Language;
@@ -22,8 +20,7 @@ const Wallet: React.FC<WalletProps> = ({ lang }) => {
     const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
     const scannerContainerId = "wallet-reader";
 
-    // Solana Hooks
-    const { publicKey, wallet: solanaWallet, connected: solanaConnected } = useWallet();
+
 
     const t = TRANSLATIONS[lang];
     const eurValue = bamValue ? (parseFloat(bamValue) / 1.95583).toFixed(2) : '0.00';
@@ -75,9 +72,9 @@ const Wallet: React.FC<WalletProps> = ({ lang }) => {
     };
 
     const handleScanSuccess = (decodedText: string) => {
-        setSuccessMessage(`Scanned: ${decodedText}. Processing payment...`);
+        setSuccessMessage(`Scanned: ${decodedText}. Demo payment flow started.`);
         setTimeout(() => {
-            setSuccessMessage("Payment logic placeholder - OAuth required for real transactions.");
+            setSuccessMessage("Demo only. Real wallet payments are not enabled in this build.");
             setIsScanning(false);
         }, 2000);
     };
@@ -102,8 +99,8 @@ const Wallet: React.FC<WalletProps> = ({ lang }) => {
                     </h1>
 
                     <p className="text-blue-600 font-medium text-lg max-w-xl leading-relaxed">
-                        Your digital gateway to seamless payments and rewards in Tuzla.
-                        Securely manage your funds and pay via QR codes.
+                        A preview wallet screen for future Tuzla payment and rewards flows.
+                        QR scanning is currently demonstration-only.
                     </p>
 
                 </div>
@@ -113,21 +110,10 @@ const Wallet: React.FC<WalletProps> = ({ lang }) => {
                     <div className="space-y-8">
                         <div className="w-full p-8 glassy rounded-[3rem] border border-blue-100 shadow-xl space-y-6">
                             <div className="bg-white/50 p-6 rounded-2xl border border-white shadow-inner">
-                                        <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Solana Public Key</p>
+                                        <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-1">Demo Wallet</p>
                                         <p className="text-sm font-mono break-all text-blue-950">
-                                            {publicKey ? publicKey.toBase58() : "Not Connected"}
+                                            Payments disabled in this build
                                         </p>
-                                        {solanaConnected && (
-                                            <p className="mt-2 text-[10px] font-black text-green-500 uppercase">
-                                                {solanaWallet?.adapter.name} Connected
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className="flex justify-center w-full">
-                                        <div className="w-full solana-connect-custom-wrapper">
-                                            <WalletMultiButton className="solana-custom-button" />
-                                        </div>
                                     </div>
 
                             <button
@@ -211,47 +197,18 @@ const Wallet: React.FC<WalletProps> = ({ lang }) => {
                         <div className="pt-4 flex items-center gap-3 text-green-500 bg-green-50/50 p-4 rounded-2xl border border-green-100">
                             <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
                             <p className="text-[10px] font-bold uppercase tracking-wider leading-tight">
-                                Transactions are secured by the Solana Blockchain
+                                Wallet UI preview only. No blockchain transaction is executed here.
                             </p>
                         </div>
                     </div>
                 </div>
 
                 <div className="mt-16 text-center text-blue-400/60 font-black text-[10px] uppercase tracking-[0.3em]">
-                    SECURE BLOCKCHAIN INFRASTRUCTURE: SOLANA
+                    DEMO EXPERIENCE: WALLET INTEGRATION PENDING
                 </div>
             </div>
 
             <style>{`
-
-                .solana-connect-custom-wrapper {
-                    display: flex;
-                    justify-content: center;
-                    width: 100%;
-                }
-                .solana-custom-button {
-                    height: 72px !important;
-                    border-radius: 1.5rem !important;
-                    background-color: #FFD700 !important;
-                    color: #9945FF !important;
-                    font-weight: 950 !important;
-                    font-size: 1rem !important;
-                    text-transform: uppercase !important;
-                    width: 100% !important;
-                    text-align: center !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    justify-content: center !important;
-                    font-family: inherit !important;
-                    border: none !important;
-                    box-shadow: 0 10px 20px -5px rgba(255, 215, 0, 0.4) !important;
-                    transition: all 0.3s ease !important;
-                }
-                .solana-custom-button:hover {
-                    background-color: #FFC000 !important;
-                    transform: translateY(-2px);
-                    box-shadow: 0 15px 30px -5px rgba(255, 215, 0, 0.6) !important;
-                }
                 .glassy {
                     background: rgba(255, 255, 255, 0.7);
                     backdrop-filter: blur(20px);

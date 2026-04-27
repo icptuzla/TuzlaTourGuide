@@ -67,6 +67,13 @@ const externalLinks = [
   { name: 'Ilincica', url: 'https://ilincica.ba', logo: '/assets/Gallery/QuestQRLocations/ilincicaba.webp' },
 ];
 
+const socialLinks = {
+  twitter: 'https://x.com',
+  facebook: 'https://facebook.com',
+  linkedin: 'https://linkedin.com',
+  icp: 'https://icp-tuzla.com',
+};
+
 const previewImages = Array.from({ length: 25 }, (_, i) => `/assets/Gallery/Photos/tuzla${i + 1}.webp`)
   .filter(p => p !== '/assets/Gallery/Photos/tuzla2.webp');
 
@@ -296,15 +303,15 @@ const LandingPage: React.FC<LandingPageProps> = ({ lang, onNavigate }) => {
 
           <div className="flex flex-col items-center gap-8">
             <div className="flex justify-center flex-wrap gap-4 sm:gap-6">
-              <a href="#" className="p-4 rounded-full bg-slate-100 text-slate-400 hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-colors relative group">
+              <a href={socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-slate-100 text-slate-400 hover:text-[#1DA1F2] hover:bg-[#1DA1F2]/10 transition-colors relative group">
                 <Twitter className="w-6 h-6" />
                 <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] uppercase font-bold px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Twitter (X)</span>
               </a>
-              <a href="#" className="p-4 rounded-full bg-slate-100 text-slate-400 hover:text-[#4267B2] hover:bg-[#4267B2]/10 transition-colors relative group">
+              <a href={socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-slate-100 text-slate-400 hover:text-[#4267B2] hover:bg-[#4267B2]/10 transition-colors relative group">
                 <Facebook className="w-6 h-6" />
                 <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] uppercase font-bold px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Facebook</span>
               </a>
-              <a href="#" className="p-4 rounded-full bg-slate-100 text-slate-400 hover:text-[#0077b5] hover:bg-[#0077b5]/10 transition-colors relative group">
+              <a href={socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="p-4 rounded-full bg-slate-100 text-slate-400 hover:text-[#0077b5] hover:bg-[#0077b5]/10 transition-colors relative group">
                 <Linkedin className="w-6 h-6" />
                 <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] uppercase font-bold px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">LinkedIn</span>
               </a>
@@ -316,7 +323,9 @@ const LandingPage: React.FC<LandingPageProps> = ({ lang, onNavigate }) => {
 
             <div className="flex flex-wrap justify-center items-center gap-8 text-sm font-bold uppercase tracking-widest">
               <a 
-                href="#" 
+                href={socialLinks.icp}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-2 group hover:text-blue-600 transition-colors border-b-2 border-transparent hover:border-blue-600 pb-1 text-slate-400"
               >
                 <img 

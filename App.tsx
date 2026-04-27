@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { motion } from 'framer-motion';
 import { Analytics } from "@vercel/analytics/react";
 const Sidebar = lazy(() => import('./components/Sidebar'));
 const LandingPage = lazy(() => import('./components/LandingPage'));
@@ -16,7 +16,6 @@ const ARGuide = lazy(() => import('./components/ARGuide'));
 const Parking = lazy(() => import('./components/Parking'));
 const LanguageSelector = lazy(() => import('./components/LanguageSelector'));
 
-import { Menu } from 'lucide-react';
 import { App as CapApp } from '@capacitor/app';
 import { AppTab, Language } from './types';
 import { Preferences } from '@capacitor/preferences';
@@ -26,54 +25,9 @@ import FullScreenImageViewer from './components/FullScreenImageViewer';
 import ErrorBoundary from './components/ErrorBoundary';
 import { getAppFeatures } from './utils/platform';
 
-// Solana Imports
-import { ConnectionProvider, WalletProvider, useWallet } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { clusterApiUrl } from '@solana/web3.js';
-import { 
-  SolanaMobileWalletAdapter, 
-  createDefaultAuthorizationResultCache, 
-  createDefaultAddressSelector, 
-  createDefaultWalletNotFoundHandler 
-} from '@solana-mobile/wallet-adapter-mobile';
-import { SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-
-// Default styles that can be overridden by your app
-import '@solana/wallet-adapter-react-ui/styles.css';
-
-const App: React.FC = () => {
-  // Solana configuration
-  const network = WalletAdapterNetwork.Mainnet;
-  const endpoint = React.useMemo(() => clusterApiUrl(network), [network]);
-  const wallets = React.useMemo(() => [
-    new SolflareWalletAdapter(),
-    new SolanaMobileWalletAdapter({
-      appIdentity: {
-        name: 'Tuzla Tour App',
-        uri: window.location.origin,
-        icon: '/assets/Gallery/QuestQRLocations/nobckgsalineslogo.png',
-      },
-      authorizationResultCache: createDefaultAuthorizationResultCache(),
-      addressSelector: createDefaultAddressSelector(),
-      cluster: network,
-      onWalletNotFound: createDefaultWalletNotFoundHandler(),
-    }),
-  ], [network]);
-
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect={false}>
-        <WalletModalProvider>
-          <AppContent />
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
-  );
-};
+const App: React.FC = () => <AppContent />;
 
 const AppContent: React.FC = () => {
-  const { disconnect } = useWallet();
   const [activeTab, setActiveTab] = useState<AppTab>(AppTab.LANDING);
   const [lang, setLang] = useState<Language>('bs');
   const [unlockedRewards, setUnlockedRewards] = useState<string[]>([]);
@@ -133,11 +87,6 @@ const AppContent: React.FC = () => {
         // We are at the root (Landing Page)
         const confirmed = window.confirm(lang === 'bs' ? 'Da li želite izaći iz aplikacije?' : 'Would you like to exit app?');
         if (confirmed) {
-          try {
-            await disconnect();
-          } catch (e) {
-            console.error("Failed to disconnect wallet on exit", e);
-          }
           CapApp.exitApp();
         }
       }
@@ -148,15 +97,7 @@ const AppContent: React.FC = () => {
     return () => {
       registration.then(r => r.remove());
     };
-  }, [history, isDrawerOpen, lang, disconnect]);
-
-  useEffect(() => {
-    const handleUnload = () => {
-      void disconnect();
-    };
-    window.addEventListener('beforeunload', handleUnload);
-    return () => window.removeEventListener('beforeunload', handleUnload);
-  }, [disconnect]);
+  }, [history, isDrawerOpen, lang]);
 
   const renderContent = () => {
     return (
