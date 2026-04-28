@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Html5Qrcode } from 'html5-qrcode';
+import type { Html5Qrcode } from 'html5-qrcode';
 import { Language } from '../types';
 import { TRANSLATIONS } from '../constants';
 import { Wallet as WalletIcon, Lock, Camera, CheckCircle2 } from 'lucide-react';
@@ -55,6 +55,7 @@ const Wallet: React.FC<WalletProps> = ({ lang }) => {
     const startScanner = async () => {
         try {
             setError(null);
+            const { Html5Qrcode } = await import('html5-qrcode');
             const html5QrCode = new Html5Qrcode(scannerContainerId);
             html5QrCodeRef.current = html5QrCode;
             const config = { fps: 10, qrbox: (vw: number, vh: number) => { const s = Math.min(vw, vh) * 0.7; return { width: s, height: s }; } };

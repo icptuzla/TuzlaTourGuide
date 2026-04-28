@@ -25,12 +25,14 @@
     "@ionic/react": "^8.8.2",
     "@tailwindcss/postcss": "^4.2.0",
     "@tailwindcss/vite": "^4.2.0",
+    "@tonconnect/sdk": "^3.4.1",
+    "@tonconnect/ui-react": "^2.4.4",
     "@types/mapbox-gl": "^3.4.1",
     "@vercel/analytics": "^2.0.1",
     "babel": "^5.8.38",
     "babel-polyfill": "^6.26.0",
     "build": "^0.1.4",
-    "esbuild": "^0.27.3",
+    "esbuild": "^0.27.7",
     "framer-motion": "^12.38.0",
     "glob": "^13.0.4",
     "html5-qrcode": "^2.3.8",
@@ -41,6 +43,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "rollup": "^4.60.2",
+    "typescript-eslint": "^8.59.1",
     "vercel": "^50.38.3"
   },
   "devDependencies": {

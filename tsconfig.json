@@ -36,6 +36,7 @@
         "node_modules",
         "dist",
         "android",
-        ".git"
+        ".git",
+        "public"
     ]
 }

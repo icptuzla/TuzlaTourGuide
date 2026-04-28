@@ -1,6 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
-import { Analytics } from "@vercel/analytics/react";
 const Sidebar = lazy(() => import('./components/Sidebar'));
 const LandingPage = lazy(() => import('./components/LandingPage'));
 const MapView = lazy(() => import('./components/MapView'));
@@ -24,6 +23,7 @@ import { ImageProvider } from './hooks/ImageContext';
 import FullScreenImageViewer from './components/FullScreenImageViewer';
 import ErrorBoundary from './components/ErrorBoundary';
 import { getAppFeatures } from './utils/platform';
+import WebAnalytics from './components/WebAnalytics';
 
 const App: React.FC = () => <AppContent />;
 
@@ -159,7 +159,7 @@ const AppContent: React.FC = () => {
 
   return (
     <ImageProvider>
-      <Analytics />
+      <WebAnalytics />
       {!features.isAndroidLight && <WaterSplash />}
 
       {/* Modern Top Bar */}

@@ -6,7 +6,7 @@ import { Language } from '../types';
 import { TUZLA_CENTER, LOCATIONS } from '../constants';
 import { tuzlaHotelData } from '../tuzlaHotelData';
 import { QrCode, Navigation, Gamepad2, CheckCircle2, Lock, Play, X, Trophy } from 'lucide-react';
-import { Html5Qrcode } from 'html5-qrcode';
+import type { Html5Qrcode } from 'html5-qrcode';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const QUEST_TARGETS = [
@@ -390,6 +390,7 @@ const MapQuestView: React.FC<MapQuestViewProps> = ({
 
   const startScanner = async () => {
     try {
+      const { Html5Qrcode } = await import('html5-qrcode');
       const html5QrCode = new Html5Qrcode(scannerContainerId);
       html5QrCodeRef.current = html5QrCode;
       await html5QrCode.start(
