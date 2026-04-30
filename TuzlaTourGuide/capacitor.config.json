@@ -1,0 +1,10 @@
+{
+  "appId": "com.icptuzla.tuzlatourguide",
+  "appName": "TuzlaTourGuide",
+  "webDir": "dist",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": false
+    }
+  }
+}
