@@ -8,6 +8,7 @@ import { tuzlaHotelData } from '../tuzlaHotelData';
 import { QrCode, Navigation, Gamepad2, CheckCircle2, Lock, Play, X, Trophy } from 'lucide-react';
 import type { Html5Qrcode } from 'html5-qrcode';
 import { motion, AnimatePresence } from 'framer-motion';
+import { createOfflineMapStyle } from '../utils/offlineMapStyle';
 
 const QUEST_TARGETS = [
   { id: 'irish', name: { en: 'Irish Pub', bs: 'Irish Pub' }, image: '/assets/Gallery/QuestQRLocations/44.53521, 18.68835 -Irish.webp' },
@@ -47,6 +48,7 @@ const MapQuestView: React.FC<MapQuestViewProps> = ({
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [playingVideo, setPlayingVideo] = useState<string | null>(null);
+  const offlineStyle = createOfflineMapStyle();
 
   const scannerContainerId = "map-quest-reader";
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
@@ -67,7 +69,7 @@ const MapQuestView: React.FC<MapQuestViewProps> = ({
 
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: `https://api.jawg.io/styles/jawg-streets.json?access-token=MJ1UjbO1irardUqAtZPQAzlWULZIZAFIsQdTrqkdC9bA34vgAGVMi20z7kP9ZRWX`,
+      style: offlineStyle,
       center: [TUZLA_CENTER[1], TUZLA_CENTER[0]],
       zoom: 15,
       pitch: 75,

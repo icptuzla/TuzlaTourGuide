@@ -36,6 +36,23 @@ const AppContent: React.FC = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [history, setHistory] = useState<AppTab[]>([AppTab.LANDING]);
   const features = getAppFeatures();
+  const tabLabel = (tab: AppTab): string => {
+    const labels: Record<AppTab, Record<Language, string>> = {
+      [AppTab.LANDING]: { en: 'Home', bs: 'Početna', de: 'Start', tr: 'Ana Sayfa' },
+      [AppTab.CITY_GUIDE]: { en: 'City Guide', bs: 'Gradski vodič', de: 'Stadtführer', tr: 'Şehir Rehberi' },
+      [AppTab.HISTORY]: { en: 'History', bs: 'Historija', de: 'Geschichte', tr: 'Tarih' },
+      [AppTab.MAP]: { en: 'Map', bs: 'Mapa', de: 'Karte', tr: 'Harita' },
+      [AppTab.QUEST]: { en: 'Quest', bs: 'Quest', de: 'Quest', tr: 'Görev' },
+      [AppTab.GALLERY]: { en: 'Gallery', bs: 'Galerija', de: 'Galerie', tr: 'Galeri' },
+      [AppTab.WALLET]: { en: 'Wallet', bs: 'Novčanik', de: 'Wallet', tr: 'Cüzdan' },
+      [AppTab.TASK_MANAGER]: { en: 'Tasks', bs: 'Zadaci', de: 'Aufgaben', tr: 'Görevler' },
+      [AppTab.FOOD]: { en: 'Food', bs: 'Hrana', de: 'Essen', tr: 'Yemek' },
+      [AppTab.ACCOMMODATION]: { en: 'Stay', bs: 'Smještaj', de: 'Unterkunft', tr: 'Konaklama' },
+      [AppTab.AR]: { en: 'AR Guide', bs: 'AR vodič', de: 'AR-Guide', tr: 'AR Rehberi' },
+      [AppTab.PARKING]: { en: 'Parking', bs: 'Parking', de: 'Parken', tr: 'Otopark' },
+    };
+    return labels[tab][lang];
+  };
 
   useEffect(() => {
     const loadUnlocked = async () => {
@@ -207,7 +224,7 @@ const AppContent: React.FC = () => {
         </filter>
       </svg>
 
-      <div className="relative min-h-screen bg-white flex overflow-hidden pt-[88px]">
+      <div className="relative min-h-screen bg-white flex overflow-hidden pt-[116px]">
         {/* Main Sliding Drawer */}
         <Sidebar
           isOpen={isDrawerOpen}
@@ -224,6 +241,18 @@ const AppContent: React.FC = () => {
             transition: 'filter 0.3s ease',
           }}
         >
+          <div className="h-7 px-4 sm:px-6 border-b border-slate-100 bg-white/90 backdrop-blur-sm flex items-center gap-1 overflow-x-auto whitespace-nowrap">
+            <button onClick={() => navigateToTab(AppTab.LANDING)} className="text-[11px] font-bold text-blue-700">
+              {tabLabel(AppTab.LANDING)}
+            </button>
+            {activeTab !== AppTab.LANDING && (
+              <>
+                <span className="text-slate-400 text-[11px]">/</span>
+                <span className="text-[11px] font-bold text-slate-700">{tabLabel(activeTab)}</span>
+              </>
+            )}
+          </div>
+
           {/* Main Content */}
           <main className="flex-1 overflow-y-auto overflow-x-hidden">
             <ErrorBoundary>

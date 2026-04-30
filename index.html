@@ -6,9 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no">
   <meta name="theme-color" content="#1e3a8a">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>Tuzla Virtual Tour Guide - Discover Panononica & More</title>
-  <meta name="description" content="Explore Tuzla, Bosnia and Herzegovina with our Virtual Tour Guide. Discover Panononica Lakes, historical sites, user quests, and interactive maps.">
-  <meta name="keywords" content="Tuzla, Tour Guide, Virtual Tour, Panononica, Bosnia and Herzegovina, Travel, Tourist Attraction, Quest, Map">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Tuzla Virtual Tour Guide - Discover Pannonica & More</title>
+  <meta name="description" content="Explore Tuzla, Bosnia and Herzegovina with our Virtual Tour Guide. Discover Pannonica Lakes, historical sites, user quests, and interactive maps.">
+  <meta name="keywords" content="Tuzla, Tour Guide, Virtual Tour, Pannonica, Bosnia and Herzegovina, Travel, Tourist Attraction, Quest, Map">
   
   <!-- Open Graph Meta Tags -->
   <meta property="og:title" content="Tuzla Virtual Tour Guide">
@@ -28,6 +30,32 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://tuzla-virtual-tour-guide.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Map",
+        "item": "https://tuzla-virtual-tour-guide.com/#map"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Quest",
+        "item": "https://tuzla-virtual-tour-guide.com/#quest"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
     "@type": "TouristAttraction",
     "name": "Pannonian Lakes (Panonika)",
     "description": "Saltwater lakes located in the center of Tuzla, offering summer beach experiences.",
@@ -41,6 +69,8 @@
 
   <!-- AI Agent / Web Crawler Docs -->
   <link rel="help" type="text/plain" title="LLM documentation" href="/llms.txt">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/Gallery/QuestQRLocations/nobckgsalineslogo.png">
 
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=MedievalSharp&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Della+Respira&display=swap"

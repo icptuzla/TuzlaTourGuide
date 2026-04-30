@@ -6,6 +6,7 @@ import { TUZLA_CENTER } from '../constants';
 import { AppFeatures } from '../utils/platform';
 import { tuzlaHotelData, HotelData } from '../tuzlaHotelData';
 import { WeatherWidget } from './WeatherWidget';
+import { createOfflineMapStyle } from '../utils/offlineMapStyle';
 
 interface MapViewProps {
   lang: Language;
@@ -18,13 +19,14 @@ const MapView: React.FC<MapViewProps> = ({ lang, features }) => {
   const userMarker = useRef<maplibregl.Marker | null>(null);
   const [zoom, setZoom] = useState(17);
   const [isLoaded, setIsLoaded] = useState(false);
+  const offlineStyle = createOfflineMapStyle();
 
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
 
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: `https://api.jawg.io/styles/jawg-sunny.json?access-token=MJ1UjbO1irardUqAtZPQAzlWULZIZAFIsQdTrqkdC9bA34vgAGVMi20z7kP9ZRWX`,
+      style: offlineStyle,
       center: [TUZLA_CENTER[1], TUZLA_CENTER[0]], // MapLibre uses [lng, lat]
       zoom: zoom,
       pitch: 75, // Steep 3D angle

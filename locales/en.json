@@ -63,8 +63,7 @@
   "busStation": "Bus Station",
   "batteryWarning": "Extreme Battery Saver Active. Lower brightness and use AR only when moving to preserve power.",
   "selectNetwork": "Select Network",
-  "solanaWallet": "TON Wallet",
   "tonWallet": "TON Wallet",
   "switchNetwork": "Switch Network",
-  "connectedToSolana": "Connected to TON"
+  "connectedToTon": "Connected to TON"
 }

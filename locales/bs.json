@@ -63,8 +63,7 @@
   "busStation": "Autobuska Stanica Tuzla",
   "batteryWarning": "Štednja baterije aktivna. Smanjite svjetlinu i koristite AR vodic samo u pokretu za duže trajanje.",
   "selectNetwork": "Odaberi mrežu",
-  "solanaWallet": "TON novčanik",
   "tonWallet": "TON novčanik",
   "switchNetwork": "Promijeni mrežu",
-  "connectedToSolana": "Povezan na TON"
+  "connectedToTon": "Povezan na TON"
 }

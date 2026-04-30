@@ -63,8 +63,7 @@
   "busStation": "Otobüs Durağı",
   "batteryWarning": "Ekstra Pil Tasarrufu Aktif. Güç tasarrufu için parlaklığı düşürün ve ARyı sadece hareket halindeyken kullanın.",
   "selectNetwork": "Ağ Seçin",
-  "solanaWallet": "TON Cüzdanı",
   "tonWallet": "TON Cüzdanı",
   "switchNetwork": "Ağı Değiştir",
-  "connectedToSolana": "TON'a Bağlı"
+  "connectedToTon": "TON'a Bağlı"
 }

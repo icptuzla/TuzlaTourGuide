@@ -53,3 +53,4 @@ npm_wsl.log
 # Gradle build directories
 build/
 .agent/
+vite-plugin-pwa/

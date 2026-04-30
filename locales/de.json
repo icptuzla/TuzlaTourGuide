@@ -63,8 +63,7 @@
   "busStation": "Busbahnhof",
   "batteryWarning": "Extremer Energiesparmodus aktiv. Helligkeit senken und AR nur bei Bewegung nutzen.",
   "selectNetwork": "Netzwerk wählen",
-  "solanaWallet": "TON Wallet",
   "tonWallet": "TON Wallet",
   "switchNetwork": "Netzwerk wechseln",
-  "connectedToSolana": "Mit TON verbunden"
+  "connectedToTon": "Mit TON verbunden"
 }
